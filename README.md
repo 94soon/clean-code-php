@@ -49,7 +49,7 @@
 ## 들어가며
 
 
-Robert C. Martin의 책, 소프트웨어 엔지니어링의 교과서라고 불리는[*Clean Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) PHP 버전입니다.
+Robert C. Martin의 책, 소프트웨어 엔지니어링의 교과서라고 불리는 [*Clean Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) PHP 버전입니다.
 이 문서는 스타일 가이드가 아닙니다. PHP로 읽기 쉽고 재사용 가능하며, 리팩토링이 쉬운 소프트웨어를 만들어내기 위한 안내서입니다.
 
 문서의 모든 원칙을 엄격하게 지켜야 할 필요는 없습니다. 그리고 어떤 것들은 일반적으로 합의되지 못할 것입니다.
@@ -463,9 +463,7 @@ function createMenu(MenuConfig $config): void
 
 ### 함수는 한가지만 해야합니다
 
-소프트웨어 엔지니어링에서 가장 중요한 규칙입니다. 함수가 1개 이상의 역할을 하게되면, 작성, 테스트, 추론하기가 어려워집니다.
-함수를 단 하나의 행동으로 떼어낼 수 있다면, 코드는 쉽게 리팩토링 될 수 있으며 훨씬 더 깔끔하게 읽힐 것입니다.
-이 문서에서 나머지는 다 갖다 버리고 이것만 지키신대도 웬만한 개발자 보다 앞서게 될 것 입니다.
+소프트웨어 엔지니어링에서 가장 중요한 규칙입니다. 함수가 1개 이상의 역할을 하게 되면, 작성, 테스트, 추론하기가 어려워집니다. 함수를 단 하나의 행동으로 떼어낼 수 있다면, 코드는 쉽게 리팩토링 될 수 있으며 훨씬 더 깔끔하게 읽힐 것입니다. 이 문서에서 나머지는 다 갖다 버리고 이것만 지키신대도 웬만한 개발자보다 앞서게 될 것입니다.
 
 **나쁜 예:**
 ```php
@@ -716,25 +714,21 @@ function createTempFile(string $name): void
 
 ### 부작용을 피하세요
 
-A function produces a side effect if it does anything other than take a value in and
-return another value or values. A side effect could be writing to a file, modifying
-some global variable, or accidentally wiring all your money to a stranger.
+함수는 다른 값을 가져와서 반환하는 것 외에 다른 기능을 수행하는 경우 부작용을 낳습니다.
+부작용은 파일에 쓰는 것일 수도 있고, 몇몇 전역 변수의 값을 수정하는 것, 실수로 모든 돈을 낯선 사람에게 보내는 것이 될 수 있습니다.
 
-Now, you do need to have side effects in a program on occasion. Like the previous
-example, you might need to write to a file. What you want to do is to centralize where
-you are doing this. Don't have several functions and classes that write to a particular
-file. Have one service that does it. One and only one.
+때때로 프로그램에서 부작용을 가질 필요가 있습니다. 앞의 예와 같이, 한 파일에 쓸 필요가 있을 수 있습니다.
+우리가 하고 싶은 것은 이 일을 하는 곳을 모으는 것입니다. 특정 파일에 쓰기 위한 여러 개의 함수와 클래스를 갖지 마세요.
+그 역할을 하는 하나의 서비스만 가지세요. 하나, 단 하나만요.
 
-The main point is to avoid common pitfalls like sharing state between objects without
-any structure, using mutable data types that can be written to by anything, and not
-centralizing where your side effects occur. If you can do this, you will be happier
-than the vast majority of other programmers.
+요점은 일반적인 함정을 피하라는 것입니다. 구조가 없는 객체 간에 상태를 공유하는 것이나, 어떤 것으로도 쓰일 수 있는 변동성 데이터를 사용하는 것, 부작용이 발생할 수 있는 곳을 모으지 않는 것 같은 함정에서요.
+만약 우리가 함정을 피할 수 있다면, 다른 대부분의 프로그래머보다 더 행복해질 거예요.
 
 **나쁜 예:**
 
 ```php
-// Global variable referenced by following function.
-// If we had another function that used this name, now it'd be an array and it could break it.
+// 다음 함수에서 참조하는 전역 변수
+// 이 이름을 사용하는 다른 함수가 있다면, 이제 배열이 되었을거고 함수가 작동하지 않을 수 있습니다.
 $name = 'Ryan McDermott';
 
 function splitIntoFirstAndLastName(): void
@@ -768,11 +762,8 @@ var_dump($newName); // ['Ryan', 'McDermott'];
 
 ### 전역 함수를 사용하지 마세요
 
-Polluting globals is a bad practice in many languages because you could clash with another
-library and the user of your API would be none-the-wiser until they get an exception in
-production. Let's think about an example: what if you wanted to have configuration array.
-You could write global function like `config()`, but it could clash with another library
-that tried to do the same thing.
+전역을 오염시키는 것은 여러 언어에서 나쁜 관행입니다. 왜냐하면 다른 라이브러리와 충돌 할 수 있고 API 사용자는 상용에서 예외를 받을 때까지 종잡을 수 없기 때문이죠.
+예를 들어볼까요? 만약 설정 배열을 갖고싶다면 어떨까요? `config()`같은 전역 함수를 작성할 수 있지만, 같은 작업을 시도하려는 다른 라이브러리와 충돌 할 수 있습니다.
 
 **나쁜 예:**
 
@@ -804,27 +795,28 @@ class Configuration
 }
 ```
 
-Load configuration and create instance of `Configuration` class
+설정을 불러오고 `Configuration` 클래스의 인스턴스를 생성하세요.
 
 ```php
 $configuration = new Configuration([
     'foo' => 'bar',
 ]);
 ```
-
-And now you must use instance of `Configuration` in your application.
+이제 우리는 애플리케이션에서 `Configuration`의 인스턴스를 반드시 사용해야 합니다.
 
 **[⬆ 위로 가기](#목차)**
 
 ### 싱글턴 패턴을 사용하지 마세요
 
-Singleton is an [anti-pattern](https://en.wikipedia.org/wiki/Singleton_pattern). Paraphrased from Brian Button:
- 1. They are generally used as a **global instance**, why is that so bad? Because **you hide the dependencies** of your application in your code, instead of exposing them through the interfaces. Making something global to avoid passing it around is a [code smell](https://en.wikipedia.org/wiki/Code_smell).
- 2. They violate the [단일 책임 원칙](#단일-책임-원칙-srp): by virtue of the fact that **they control their own creation and lifecycle**.
- 3. They inherently cause code to be tightly [coupled](https://en.wikipedia.org/wiki/Coupling_%28computer_programming%29). This makes faking them out under **test rather difficult** in many cases.
- 4. They carry state around for the lifetime of the application. Another hit to testing since **you can end up with a situation where tests need to be ordered** which is a big no for unit tests. Why? Because each unit test should be independent from the other.
+싱글턴은 [안티 패턴](https://en.wikipedia.org/wiki/Singleton_pattern) 입니다.
 
-There is also very good thoughts by [Misko Hevery](http://misko.hevery.com/about/) about the [root of problem](http://misko.hevery.com/2008/08/25/root-cause-of-singletons/).
+Brian Button이 쉽게 풀어쓴 바로는
+ 1. 싱글턴은 일반적으로 **전역 인스턴스** 로 사용되는데, 왜 그게 그렇게 나쁠까요? 그 이유는 애플리케이션의 **의존성** 을 인터페이스를 통해 노출하는 대신 코드에 **숨기기** 때문입니다. 넘기는 것을 피하기 위해 무언가를 전역으로 만드는 것은 [코드 스멜](https://en.wikipedia.org/wiki/Code_smell)입니다.
+ 2. **스스로의 생성과 생명주기를 제어** 한다는 사실에 의해서 [단일 책임 원칙](#단일-책임-원칙-srp)를 어깁니다.
+ 3. 본질적으로 코드를 단단하게 [결합](https://en.wikipedia.org/wiki/Coupling_%28computer_programming%29)시키는 원인이 됩니다. This makes faking them out under **test rather difficult** in many cases.
+ 4. 애플리케이션의 생명주기 동안 상태를 유지합니다. 유닛 테스트에서는 크게 문제가 되지 않는 **테스트를 주문해야 하는 상황** 이 발생할 수 있으므로 또 다른 테스트 히트가 발생할 수 있습니다. 그 이유는 무엇일까요? 각각의 유닛 테스트는 다른 유닛 테스트와 독립적이어야 하기 때문입니다.
+
+[Misko Hevery](http://misko.hevery.com/about/)가 [문제의 근원](http://misko.hevery.com/2008/08/25/root-cause-of-singletons/)에 대해 작성한 매우 좋은 생각도 있습니다.
 
 **나쁜 예:**
 
@@ -867,13 +859,12 @@ class DBConnection
 }
 ```
 
-Create instance of `DBConnection` class and configure it with [DSN](http://php.net/manual/en/pdo.construct.php#refsect1-pdo.construct-parameters).
+`DBConnection` 클래스의 인스턴스를 생성하고 [DSN](http://php.net/manual/en/pdo.construct.php#refsect1-pdo.construct-parameters)을 설정합니다.
 
 ```php
 $connection = new DBConnection($dsn);
 ```
-
-And now you must use instance of `DBConnection` in your application.
+이제 우리는 어플리케이션에서 `DBConnection`의 인스턴스를 사용해야 합니다.
 
 **[⬆ 위로 가기](#목차)**
 
@@ -930,14 +921,12 @@ if (isDOMNodePresent($node)) {
 
 ### 조건문을 피하세요
 
-This seems like an impossible task. Upon first hearing this, most people say,
-"how am I supposed to do anything without an `if` statement?" The answer is that
-you can use polymorphism to achieve the same task in many cases. The second
-question is usually, "well that's great but why would I want to do that?" The
-answer is a previous clean code concept we learned: a function should only do
-one thing. When you have classes and functions that have `if` statements, you
-are telling your user that your function does more than one thing. Remember,
-just do one thing.
+이건 불가능한 일처럼 보일 겁니다. 이 말을 처음 들은 대부분의 사람들은 묻습니다. "어떻게 `if` 문 없이 뭔가를 할 수 있죠?"
+그에 대한 답은 다형성입니다. 많은 케이스에서 같은 일을 완수하기 위해 우리는 다형성을 사용할 수 있습니다.
+두 번째 질문은 일반적으로 이럴 거예요. "음, 좋습니다. 하지만 왜 제가 그렇게 해야 하죠?"
+그에 대한 대답은 우리가 이전에 배운 클린코드 개념 때문입니다. '함수는 한 가지만 해야 합니다.'
+`if` 문을 가진 함수와 클래스를 가지게 될 때, 우리는 우리의 함수가 한가지 이상을 한다고 사람들에게 말하는 셈입니다.
+기억하세요. 딱 한 가지만 하세요.
 
 **나쁜 예:**
 
@@ -1005,10 +994,9 @@ class Cessna implements Airplane
 
 ### 타입 체킹을 피하세요 (part 1)
 
-PHP is untyped, which means your functions can take any type of argument.
-Sometimes you are bitten by this freedom and it becomes tempting to do
-type-checking in your functions. There are many ways to avoid having to do this.
-The first thing to consider is consistent APIs.
+PHP는 타입이 없습니다. 즉, 우리의 함수가 어떠한 타입의 인수도 가질 수 있다는 걸 뜻합니다.
+때때로 우리는 이러한 자유에 물리기도 합니다. 그래서 우리의 함수 내에서 타입 체킹을 하는 것에 구미가 당기게 되곤 합니다.
+이렇게 하는 것을 피하는 많은 방법이 있습니다. 고려할 첫 번째는 일관된 API입니다.
 
 **나쁜 예:**
 
@@ -1036,15 +1024,11 @@ function travelToTexas(Traveler $vehicle): void
 
 ### 타입 체킹을 피하세요 (part 2)
 
-If you are working with basic primitive values like strings, integers, and arrays,
-and you use PHP 7+ and you can't use polymorphism but you still feel the need to
-type-check, you should consider
-[type declaration](http://php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration)
-or strict mode. It provides you with static typing on top of standard PHP syntax.
-The problem with manually type-checking is that doing it will require so much
-extra verbiage that the faux "type-safety" you get doesn't make up for the lost
-readability. Keep your PHP clean, write good tests, and have good code reviews.
-Otherwise, do all of that but with PHP strict type declaration or strict mode.
+만약 PHP 7 이상의 버전으로 string, integers, 그리고 array 같은 기본 자료형을 가지고 일하고 있고, 다형성을 사용할 순 없지만
+여전히 타입을 체크해야할 필요성을 느낀다면 [타입 선언](http://php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration)이나 strict 모드를 고려해야 합니다.
+이것은 표준 PHP 문법에 정적 타입을 제공합니다.
+직접 타입을 체크할 때의 문제는, 너무 많은 추가적인 장황함을 필요로 해서 잃어버린 가독성을 보상해줄 수 없는 가짜 "안전한 타입"을 만들어 낸다는 것입니다.
+PHP는 깔끔하게 두고, 좋은 테스트를 작성하고, 좋은 코드 리뷰를 가지세요. 그게 싫다면, PHP strict 타입 선언이나 strict 모드로 모든 작업을 수행하세요.
 
 **나쁜 예:**
 
@@ -1052,7 +1036,7 @@ Otherwise, do all of that but with PHP strict type declaration or strict mode.
 function combine($val1, $val2): int
 {
     if (!is_numeric($val1) || !is_numeric($val2)) {
-        throw new \Exception('Must be of type Number');
+        throw new \Exception('숫자 타입이어야 합니다.');
     }
 
     return $val1 + $val2;
@@ -1072,9 +1056,8 @@ function combine(int $val1, int $val2): int
 
 ### 불필요한 코드는 제거하세요
 
-Dead code is just as bad as duplicate code. There's no reason to keep it in
-your codebase. If it's not being called, get rid of it! It will still be safe
-in your version history if you still need it.
+불필요한 코드는 중복된 코드만큼이나 나쁩니다. 코드에 남겨야 할 이유가 전혀 없습니다. 호출이 안되고 있다면 없애버리세요!
+만약 여전히 필요하대도 버전 기록에 안전하게 남아있을 것입니다.
 
 **나쁜 예:**
 
@@ -1112,19 +1095,18 @@ inventoryTracker('apples', $request, 'www.inventory-awesome.io');
 
 ### 객체 캡슐화를 사용하세요
 
-In PHP you can set `public`, `protected` and `private` keywords for methods.
-Using it, you can control properties modification on an object.
+PHP에서는 메소드에 `public`, `protected`,`private`을 설정할 수 있습니다.
+이를 통해 객체의 프로퍼티 수정을 제어할 수 있습니다.
 
-* When you want to do more beyond getting an object property, you don't have
-to look up and change every accessor in your codebase.
-* Makes adding validation simple when doing a `set`.
-* Encapsulates the internal representation.
-* Easy to add logging and error handling when getting and setting.
-* Inheriting this class, you can override default functionality.
+* 객체 프로퍼티를 얻는 것 이상의 일을 하고 싶다면, 코드단에 있는 모든 접근자를 찾아보고 바꿀 필요가 없습니다.
+* `set`을 할때 검증(밸리데이션)을 간단하게 추가합니다.
+* 내부 표현을 캡슐화합니다.
+* 가져오고 설정할 때 로깅 및 오류 처리를 추가하기 쉽습니다.
+* 클래스를 상속 받아서, 기본 기능을 오버라이드 할 수 있습니다.
 * You can lazy load your object's properties, let's say getting it from a
 server.
 
-Additionally, this is part of [Open/Closed](#개방폐쇄-원칙-ocp) principle.
+또한, 이는 [개방/폐쇄 원칙 (OCP)](#개방폐쇄-원칙-ocp) 원칙의 일부입니다.
 
 **나쁜 예:**
 
@@ -1136,7 +1118,7 @@ class BankAccount
 
 $bankAccount = new BankAccount();
 
-// Buy shoes...
+// 신발을 산다
 $bankAccount->balance -= 100;
 ```
 
@@ -1334,22 +1316,16 @@ class Employee
 
 ### 유창한 인터페이스를 피하세요
 
-A [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) is an object
-oriented API that aims to improve the readability of the source code by using
-[Method chaining](https://en.wikipedia.org/wiki/Method_chaining).
+[유창한 인터페이스](https://en.wikipedia.org/wiki/Fluent_interface)는 [Method chaining](https://en.wikipedia.org/wiki/Method_chaining)을 사용해 소스 코드의 가독성을 증진시키기 위한 객체지향 API입니다.
 
-While there can be some contexts, frequently builder objects, where this
-pattern reduces the verbosity of the code (for example the [PHPUnit Mock Builder](https://phpunit.de/manual/current/en/test-doubles.html)
-or the [Doctrine Query Builder](http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html)),
-more often it comes at some costs:
+어떤 맥락이 있을 수 있지만, 패턴들이 코드의 장황함을 줄여주는, 주로 빌더 객체들은(예를 들어 [PHPUnit Mock Builder](https://phpunit.de/manual/current/en/test-doubles.html) 나 [Doctrine Query Builder](http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html)) 조금 더 자주 비용을 동반하곤 합니다.
 
-1. Breaks [Encapsulation](https://en.wikipedia.org/wiki/Encapsulation_%28object-oriented_programming%29)
-2. Breaks [Decorators](https://en.wikipedia.org/wiki/Decorator_pattern)
-3. Is harder to [mock](https://en.wikipedia.org/wiki/Mock_object) in a test suite
-4. Makes diffs of commits harder to read
+1. [캡슐화](https://en.wikipedia.org/wiki/Encapsulation_%28object-oriented_programming%29)를 어깁니다.
+2. [데코레이터 패턴](https://en.wikipedia.org/wiki/Decorator_pattern)을 어깁니다.
+3. 테스트 슈트에서 [mock](https://en.wikipedia.org/wiki/Mock_object)이 어려워집니다.
+4. commit의 변경사항을 읽기 어렵게 만듭니다.
 
-For more informations you can read the full [blog post](https://ocramius.github.io/blog/fluent-interfaces-are-evil/)
-on this topic written by [Marco Pivetta](https://github.com/Ocramius).
+더 많은 정보는 [Marco Pivetta](https://github.com/Ocramius)가 이 주제에 대해 작성한 [blog post](https://ocramius.github.io/blog/fluent-interfaces-are-evil/) 에서 전체를 읽어 볼 수 있습니다.
 
 **나쁜 예:**
 
@@ -1438,7 +1414,7 @@ $car->dump();
 
 ## SOLID
 
-**SOLID** is the mnemonic acronym introduced by Michael Feathers for the first five principles named by Robert Martin, which meant five basic principles of object-oriented programming and design.
+**SOLID** 는 Robert Martin이 명명한 5가지 원칙의 앞 글자로 객체지향 프로그래밍과 디자인을 뜻하는 5가지 기본 원칙을 뜻합니다. Michael Feathers가 고안한 니모닉 약어를 사용하였습니다.
 
  * [S: 단일 책임 원칙 (SRP)](#단일-책임-원칙-srp)
  * [O: 개방/폐쇄 원칙 (OCP)](#개방폐쇄-원칙-ocp)
@@ -1448,14 +1424,11 @@ $car->dump();
 
 ### 단일 책임 원칙 (SRP)
 
-As stated in Clean Code, "There should never be more than one reason for a class
-to change". It's tempting to jam-pack a class with a lot of functionality, like
-when you can only take one suitcase on your flight. The issue with this is
-that your class won't be conceptually cohesive and it will give it many reasons
-to change. Minimizing the amount of times you need to change a class is important.
-It's important because if too much functionality is in one class and you modify a piece of it,
-it can be difficult to understand how that will affect other dependent modules in
-your codebase.
+클린 코드에서 명시되어 있듯이, "클래스를 변경하는데 한가지 이상의 이유가 있어서는 안 됩니다."
+한 클래스를 많은 기능을 꽉 채우는 것은 유혹적입니다. 마치 기내에 딱 하나의 여행용 가방을 가져갈 수 있을 때처럼요.
+이것의 문제는 클래스가 개념적으로 일관되지 않게되며 클래스를 변경할 여러 이유를 만들 것이라는 겁니다.
+클래스를 변경해야 할 필요가 있을 때 드는 시간을 최소화시키는 것은 중요합니다. 그 이유는
+만약, 너무 많은 기능이 한 클래스에 있고 그중 한 부분을 수정해야 한다면 코드 안에 의존하고 있는 다른 모듈에 어떤 영향을 미치는지 파악하기 어렵기 때문입니다.
 
 **나쁜 예:**
 
@@ -1525,10 +1498,8 @@ class UserSettings
 
 ### 개방/폐쇄 원칙 (OCP)
 
-As stated by Bertrand Meyer, "software entities (classes, modules, functions,
-etc.) should be open for extension, but closed for modification." What does that
-mean though? This principle basically states that you should allow users to
-add new functionalities without changing existing code.
+Bertrand Meyer가 말하기를, "소프트웨어 개체(클래스, 모듈, 함수 등)는 확장에 대해서는 개방되어야 하며, 변경에서는 폐쇄되어 있어야 합니다."
+이것은 무엇을 의미할까요? 이 원칙은 기본적으로 사용자가 기존 코드를 변경하지 않고 새로운 기능을 추가할 수 있도록 허용해야 한다는 것을 뜻합니다.
 
 **나쁜 예:**
 
@@ -1585,12 +1556,12 @@ class HttpRequester
 
     private function makeAjaxCall(string $url): Promise
     {
-        // request and return promise
+        // request하고 promise를 return함
     }
 
     private function makeHttpCall(string $url): Promise
     {
-        // request and return promise
+        // request하고 promise를 return함
     }
 }
 ```
@@ -1607,7 +1578,7 @@ class AjaxAdapter implements Adapter
 {
     public function request(string $url): Promise
     {
-        // request and return promise
+        // request하고 promise를 return함
     }
 }
 
@@ -1615,7 +1586,7 @@ class NodeAdapter implements Adapter
 {
     public function request(string $url): Promise
     {
-        // request and return promise
+        // request하고 promise를 return함
     }
 }
 
@@ -1639,18 +1610,14 @@ class HttpRequester
 
 ### 리스코브 치환 원칙 (LSP)
 
-This is a scary term for a very simple concept. It's formally defined as "If S
-is a subtype of T, then objects of type T may be replaced with objects of type S
-(i.e., objects of type S may substitute objects of type T) without altering any
-of the desirable properties of that program (correctness, task performed,
-etc.)." That's an even scarier definition.
+단순한 개념을 지칭하는 무시무시해 보이는 용어입니다. 공식적으로는 다음과 같이 정의되어있습니다.
+"만약 S가 T의 서브 타입이라면, T 타입의 객체는 프로그램의 바람직한 특성(정합성, 수행된 작업 등)을 하나도 바꾸지 않으면서 S 타입의 객체로 교체될 수 있습니다. (즉, S 타입의 객체는 T 타입의 객체를 대체할 수 있습니다)"
+더 무시무시한 정의였네요.
 
-The best explanation for this is if you have a parent class and a child class,
-then the base class and child class can be used interchangeably without getting
-incorrect results. This might still be confusing, so let's take a look at the
-classic Square-Rectangle example. Mathematically, a square is a rectangle, but
-if you model it using the "is-a" relationship via inheritance, you quickly
-get into trouble.
+이에 대한 가장 좋은 설명은 다음과 같습니다.
+만약 우리가 부모 클래스와 자식 클래스를 가지고 있다면, 부정확한 결과를 얻지 않으면서 기본 클래스와 자식 클래스를 서로 교환하여 사용할 수 있다는 것입니다.
+여전히 혼란스러울 수 있으니, 전형적인 정사각형-직사각형 예제를 들어봅시다.
+수학적으로 정사각형은 사각형입니다. 그러나, 상속을 통한 'is-a' 관계로 설계하면 빠르게 문제에 휘말리게 됩니다.
 
 **나쁜 예:**
 
@@ -1702,7 +1669,7 @@ function renderLargeRectangles(array $rectangles): void
     foreach ($rectangles as $rectangle) {
         $rectangle->setWidth(4);
         $rectangle->setHeight(5);
-        $area = $rectangle->getArea(); // BAD: Will return 25 for Square. Should be 20.
+        $area = $rectangle->getArea(); // 땡: 20이어야 하는 데, 정사각형에 25를 return할 것입니다.
         $rectangle->render($area);
     }
 }
@@ -1775,13 +1742,11 @@ renderLargeRectangles($shapes);
 
 ### 인터페이스 분리 원칙 (ISP)
 
-ISP states that "Clients should not be forced to depend upon interfaces that
-they do not use."
+ISP는 "클라이언트는 사용하지 않는 인터페이스에 의존하도록 강요되어서는 안 된다."를 뜻합니다.
 
-A good example to look at that demonstrates this principle is for
-classes that require large settings objects. Not requiring clients to setup
-huge amounts of options is beneficial, because most of the time they won't need
-all of the settings. Making them optional helps prevent having a "fat interface".
+이 원칙을 잘 설명해주는 예로는 많은 설정 객체를 요구하는 클래스를 들 수 있겠습니다.
+클라이언트가 많은 양의 옵션을 설치하도록 요구하지 않는 것이 이롭습니다. 대부분의 경우, 모든 설치가 필요하지는 않기 때문이죠.
+이것들을 선택사항으로 만드는 것이 "뚱뚱한 인터페이스"를 가지는 것을 방지합니다.
 
 **나쁜 예:**
 
@@ -1797,12 +1762,12 @@ class Human implements Employee
 {
     public function work(): void
     {
-        // ....working
+        // .... 일하는 중
     }
 
     public function eat(): void
     {
-        // ...... eating in lunch break
+        // ...... 점심 휴식 시간에 먹는 중
     }
 }
 
@@ -1810,19 +1775,19 @@ class Robot implements Employee
 {
     public function work(): void
     {
-        //.... working much more
+        //.... 훨씬 많이 일하는 중
     }
 
     public function eat(): void
     {
-        //.... robot can't eat, but it must implement this method
+        //.... 로봇은 먹을 수 없지만, 이 메소드를 반드시 implement해야합니다..
     }
 }
 ```
 
 **좋은 예:**
 
-Not every worker is an employee, but every employee is a worker.
+모든 일꾼(worker)이 직원(employee)은 아니지만, 모든 직원(employee)은 '일꾼(worker)' 입니다.
 
 ```php
 interface Workable
@@ -1843,21 +1808,21 @@ class Human implements Employee
 {
     public function work(): void
     {
-        // ....working
+        // .... 일하는 중
     }
 
     public function eat(): void
     {
-        //.... eating in lunch break
+        //.... 점심 휴식시간에 먹는 중
     }
 }
 
-// robot can only work
+// 로봇은 일만 할 수 있어요
 class Robot implements Workable
 {
     public function work(): void
     {
-        // ....working
+        // .... 일하는 중
     }
 }
 ```
@@ -1866,18 +1831,14 @@ class Robot implements Workable
 
 ### 의존성 역전 원칙 (DIP)
 
-This principle states two essential things:
-1. High-level modules should not depend on low-level modules. Both should
-depend on abstractions.
-2. Abstractions should not depend upon details. Details should depend on
-abstractions.
+이 원칙은 두 가지 필수 사항을 명시합니다.
+1. 상위 레벨의 모듈은 하위 수준의 모듈에 의존해서는 안 됩니다. 상위 레벨과 하위 레벨의 모듈 모두 추상화에 의존해야 합니다.
+2. 추상화된 것은 구체적인 것에 의존하면 안 됩니다. 구체적인 사항들은 추상화에 의존해야 합니다.
 
-This can be hard to understand at first, but if you've worked with PHP frameworks (like Symfony), you've seen an implementation of this principle in the form of Dependency
-Injection (DI). While they are not identical concepts, DIP keeps high-level
-modules from knowing the details of its low-level modules and setting them up.
-It can accomplish this through DI. A huge benefit of this is that it reduces
-the coupling between modules. Coupling is a very bad development pattern because
-it makes your code hard to refactor.
+한 번에 이해하기는 어려울 수 있습니다. 하지만 만약 당신이 PHP 프레임워크(symfony 등)를 사용해왔다면, 의존성 주입(DI, Dependency Injection)폼 안에 해당 원칙이 구현된 것을 보아왔을 것입니다.
+같은 개념은 아니지만, DIP는 상위 레벨 모듈들이 하위 레벨 모듈의 세부 사항을 알지 못하게 하고 그것들을 설정하는 것을 막습니다.
+이것은 의존성 주입을 통해서 완수할 수 있습니다. 의존성 주입의 가장 큰 장점은 모듈 간의 결합을 줄일 수 있다는 것입니다.
+결합은 아주 안 좋은 개발 패턴입니다. 그 이유는 우리의 코드를 리팩토링하기 어렵게 만들기 때문입니다.
 
 **나쁜 예:**
 
@@ -1886,7 +1847,7 @@ class Employee
 {
     public function work(): void
     {
-        // ....working
+        // ....일하는 중
     }
 }
 
@@ -1894,7 +1855,7 @@ class Robot extends Employee
 {
     public function work(): void
     {
-        //.... working much more
+        //....훨씬 더 많이 일하는 중
     }
 }
 
@@ -1926,7 +1887,7 @@ class Human implements Employee
 {
     public function work(): void
     {
-        // ....working
+        // ....일하는 중
     }
 }
 
@@ -1934,7 +1895,7 @@ class Robot implements Employee
 {
     public function work(): void
     {
-        //.... working much more
+        //....훨씬 더 많이 일하는 중
     }
 }
 
@@ -1972,7 +1933,7 @@ class Manager
 올바른 추상화를 갖는 것은 중요합니다. 그것이 [클래스](#클래스) 섹션에 있는 SOLID 원칙을 따라야 하는 이유입니다.
 나쁜 추상화는 중복된 코드보다 나쁠 수 있습니다. 그러니 조심하세요!
 지금껏 말했듯이, 좋은 추상화를 만들 수 있다면 그렇게 하세요!
-같은 것을 반복 하지 마세요, 그렇지 않으면 하나를 바꾸려 할 때마다 여러 군데를 수정하고 있는 우리 자신을 발견하게 될 테니까요..
+같은 것을 반복 하지 마세요, 그렇지 않으면 하나를 바꾸려 할 때마다 여러 군데를 수정하고 있는 우리 자신을 발견하게 될 테니까요.
 
 **나쁜 예:**
 
@@ -2066,7 +2027,7 @@ function showList(array $employees): void
    * [panuwizzle/clean-code-php](https://github.com/panuwizzle/clean-code-php)
 * :fr: **불어:**
    * [errorname/clean-code-php](https://github.com/errorname/clean-code-php)
-* :ko: **한국어:**
+* 🇰🇷 **한국어:**
   * [yujineeee/clean-code-php](https://github.com/yujineeee/clean-code-php)
 
 
