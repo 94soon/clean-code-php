@@ -139,7 +139,7 @@ class User
 }
 
 if ($user->access & User::ACCESS_UPDATE) {
-    // do edit ...
+    // 수정하세요...
 }
 ```
 
@@ -425,7 +425,7 @@ $a !== $b는 true를 return 합니다.
 
 함수 매개변수의 개수를 제한하는 것은 엄청나게 중요합니다. 함수를 테스트하는 것을 더 쉽게 만들어 주기 때문이죠. 3개 이상의 매개변수는 테스트 조합을 폭발하게 합니다. 매개변수마다 서로 다른 수많은 케이스를 테스트해야 하기 때문입니다.
 
-매개변수가 없는 것(0개)이 가장 이상적입니다. 1개에서 2개 정도는 괜찮습니다. 3개는 피해야 합니다. 매개변수가 3개를 넘어가면 통합되어야 합니다. 일반적으로, 매개변수가 2개 이상이라면 그 함수는 너무 많은 역할을 하는 것입니다. 그런 경우가 아니라면, 고수준의 객체는 대부분 하나의 매개변수로 충분할 것입니다.
+매개변수가 없는 것(0개)이 가장 이상적입니다. 1개에서 2개 정도는 괜찮습니다. 3개는 피해야 합니다. 매개변수가 3개를 넘어가면 통합되어야 합니다. 일반적으로, 매개변수가 2개 이상이라면 그 함수는 너무 많은 역할을 하는 것입니다. 그런 경우가 아니라면, 상위 레벨의 객체는 대부분 하나의 매개변수로 충분할 것입니다.
 
 **나쁜 예:**
 
@@ -813,8 +813,8 @@ $configuration = new Configuration([
 Brian Button이 쉽게 풀어쓴 바로는
  1. 싱글턴은 일반적으로 **전역 인스턴스** 로 사용되는데, 왜 그게 그렇게 나쁠까요? 그 이유는 애플리케이션의 **의존성** 을 인터페이스를 통해 노출하는 대신 코드에 **숨기기** 때문입니다. 넘기는 것을 피하기 위해 무언가를 전역으로 만드는 것은 [코드 스멜](https://en.wikipedia.org/wiki/Code_smell)입니다.
  2. **스스로의 생성과 생명주기를 제어** 한다는 사실에 의해서 [단일 책임 원칙](#단일-책임-원칙-srp)를 어깁니다.
- 3. 본질적으로 코드를 단단하게 [결합](https://en.wikipedia.org/wiki/Coupling_%28computer_programming%29)시키는 원인이 됩니다. This makes faking them out under **test rather difficult** in many cases.
- 4. 애플리케이션의 생명주기 동안 상태를 유지합니다. 유닛 테스트에서는 크게 문제가 되지 않는 **테스트를 주문해야 하는 상황** 이 발생할 수 있으므로 또 다른 테스트 히트가 발생할 수 있습니다. 그 이유는 무엇일까요? 각각의 유닛 테스트는 다른 유닛 테스트와 독립적이어야 하기 때문입니다.
+ 3. 본질적으로 코드를 단단하게 [결합](https://en.wikipedia.org/wiki/Coupling_%28computer_programming%29)시키는 원인이 됩니다. 이로인해 많은 경우에서 **테스트가 어려워지게** 만듭니다.
+ 4. 애플리케이션의 생명주기 동안 상태를 유지합니다. 유닛 테스트에서는 크게 문제가 되지 않지만 **테스트가 요구되는 상황으로 끝날 수 있어** 또 다른 타격이 발생할 수 있습니다. 그 이유는 무엇일까요? 각각의 유닛 테스트는 다른 유닛 테스트와 독립적이어야 하기 때문입니다.
 
 [Misko Hevery](http://misko.hevery.com/about/)가 [문제의 근원](http://misko.hevery.com/2008/08/25/root-cause-of-singletons/)에 대해 작성한 매우 좋은 생각도 있습니다.
 
@@ -1103,8 +1103,7 @@ PHP에서는 메소드에 `public`, `protected`,`private`을 설정할 수 있�
 * 내부 표현을 캡슐화합니다.
 * 가져오고 설정할 때 로깅 및 오류 처리를 추가하기 쉽습니다.
 * 클래스를 상속 받아서, 기본 기능을 오버라이드 할 수 있습니다.
-* You can lazy load your object's properties, let's say getting it from a
-server.
+* 서버에서 가져온다고 할 때, 객체의 프로퍼티를 느리게 로드할 수 있습니다.
 
 또한, 이는 [개방/폐쇄 원칙 (OCP)](#개방폐쇄-원칙-ocp) 원칙의 일부입니다.
 
@@ -1118,7 +1117,7 @@ class BankAccount
 
 $bankAccount = new BankAccount();
 
-// 신발을 산다
+// 신발을 삼
 $bankAccount->balance -= 100;
 ```
 
@@ -1156,10 +1155,10 @@ class BankAccount
 
 $bankAccount = new BankAccount();
 
-// Buy shoes...
+// 신발을 삼
 $bankAccount->withdraw($shoesPrice);
 
-// Get balance
+// 잔액을 받아옴
 $balance = $bankAccount->getBalance();
 ```
 
@@ -1167,13 +1166,14 @@ $balance = $bankAccount->getBalance();
 
 ### 객체가 private/protected 멤버를 갖게 하세요
 
-* `public` methods and properties are most dangerous for changes, because some outside code may easily rely on them and you can't control what code relies on them. **Modifications in class are dangerous for all users of class.**
-* `protected` modifier are as dangerous as public, because they are available in scope of any child class. This effectively means that difference between public and protected is only in access mechanism, but encapsulation guarantee remains the same. **Modifications in class are dangerous for all descendant classes.**
-* `private` modifier guarantees that code is **dangerous to modify only in boundaries of single class** (you are safe for modifications and you won't have [Jenga effect](http://www.urbandictionary.com/define.php?term=Jengaphobia&defid=2494196)).
+* `public`메소드와 프로퍼티는 변경에 가장 취약합니다. 그 이유는 어떤 외부 코드가 쉽게 의존할 수 있고, 어떤 코드가 의존하고 있는지 제어할 수 없기 때문입니다.
+**클래스의 수정은 클래스의 모든 사용자에게 위험합니다.**
+* `protected` 제어자는 `public` 만큼이나 위험합니다. 자식 클래스 범위내에서 사용할 수 있기 때문입니다. 이는 public과 protected의 차이점은 접근 매커니즘에만 있다는 것을 의미하나, 캡슐화 보증은 동일하게 유지됩니다. **클래스의 수정은 모든 하위 클래스에 위험합니다.**
+* `private` 제어자는 코드가 **단일 클래스의 경계에서만 수정하는 것이 위험함** 을 보증합니다(변경하는 것이 안전하며 [젠가 효과](http://www.urbandictionary.com/define.php?term=Jengaphobia&defid=2494196)를 갖지 않을 것 입니다.).
 
-Therefore, use `private` by default and `public/protected` when you need to provide access for external classes.
+그러므로 `private` 을 기본으로 사용하고 외부 클래스에 대한 접근 권한을 제공해야 할 때 `public/protected`를 사용하세요.
 
-For more informations you can read the [blog post](http://fabien.potencier.org/pragmatism-over-theory-protected-vs-private.html) on this topic written by [Fabien Potencier](https://github.com/fabpot).
+더 많은 정보를 원하면 이 주제에 대해서 [Fabien Potencier](https://github.com/fabpot)가 작성한 [블로그 포스트](http://fabien.potencier.org/pragmatism-over-theory-protected-vs-private.html)를 읽어볼 수 있습니다.
 
 **나쁜 예:**
 
@@ -1189,7 +1189,7 @@ class Employee
 }
 
 $employee = new Employee('John Doe');
-echo 'Employee name: '.$employee->name; // Employee name: John Doe
+echo 'Employee name: '.$employee->name; // 직원명: John Doe
 ```
 
 **좋은 예:**
@@ -1211,7 +1211,7 @@ class Employee
 }
 
 $employee = new Employee('John Doe');
-echo 'Employee name: '.$employee->getName(); // Employee name: John Doe
+echo 'Employee name: '.$employee->getName(); // 직원명: John Doe
 ```
 
 **[⬆ 위로 가기](#목차)**
@@ -1220,22 +1220,18 @@ echo 'Employee name: '.$employee->getName(); // Employee name: John Doe
 
 ### 상속보다는 컴포지션을 사용하세요
 
-As stated famously in [*Design Patterns*](https://en.wikipedia.org/wiki/Design_Patterns) by the Gang of Four,
-you should prefer composition over inheritance where you can. There are lots of
-good reasons to use inheritance and lots of good reasons to use composition.
-The main point for this maxim is that if your mind instinctively goes for
-inheritance, try to think if composition could model your problem better. In some
-cases it can.
+GoF(the Gang of Four)의 [*디자인 패턴*](https://en.wikipedia.org/wiki/Design_Patterns)에서 잘 알려진 바와 같이,
+가능하다면 상속보다는 컴포지션을 선호해야 합니다.
+상속을 사용하는 데는 여러 가지 좋은 이유가 있으며 컴포지션을 사용하는 데도 여러 가지 좋은 이유가 있습니다.
 
-You might be wondering then, "when should I use inheritance?" It
-depends on your problem at hand, but this is a decent list of when inheritance
-makes more sense than composition:
+이 좌우명의 요지는 만약 우리가 본능적으로 상속을 생각한다면, 컴포지션이 우리의 문제를 더 잘 설계할 수 있을지 생각해보려 노력하라는 것입니다.
+어떤 경우에는 그렇거든요.
 
-1. Your inheritance represents an "is-a" relationship and not a "has-a"
-relationship (Human->Animal vs. User->UserDetails).
-2. You can reuse code from the base classes (Humans can move like all animals).
-3. You want to make global changes to derived classes by changing a base class.
-(Change the caloric expenditure of all animals when they move).
+아마도 이렇게 생각하고 있을지도 모릅니다, "그럼 언제 상속을 사용해야 하지?" 눈앞에 닥친 문제에 따라 다릅니다만, 아래 목록은 상속이 컴포지션보다 더 잘 맞는 경우입니다.
+
+1. 상속이 "has-a" 관계가 아닌 "is-a"관계를 나타냅니다. (사용자->사용자 세부정보 vs 인간->동물)
+2. 기본 클래스의 코드를 재사용할 수 있습니다. (인간은 모든 동물처럼 움직일 수 있습니다.)
+3. 기본 클래스를 변경하여 파생 클래스에 대한 전역 변경을 원하는 경우 (모든 동물의 움직일 때의 칼로리 소모량 변경)
 
 **나쁜 예:**
 
@@ -1254,8 +1250,8 @@ class Employee
     // ...
 }
 
-// Bad because Employees "have" tax data.
-// EmployeeTaxData is not a type of Employee
+// 직원(Employee)들이 세금 데이터를 "가지고" 있기 때문에 좋지 않습니다.
+// EmployeeTaxData는 직원(Employee) 타입이 아닙니다.
 
 class EmployeeTaxData extends Employee
 {
@@ -1340,7 +1336,7 @@ class Car
     {
         $this->make = $make;
 
-        // NOTE: Returning this for chaining
+        // NOTE: 체인에 대한 반환
         return $this;
     }
 
@@ -1348,7 +1344,7 @@ class Car
     {
         $this->model = $model;
 
-        // NOTE: Returning this for chaining
+        // NOTE: 체인에 대한 반환
         return $this;
     }
 
@@ -1356,7 +1352,7 @@ class Car
     {
         $this->color = $color;
 
-        // NOTE: Returning this for chaining
+        // NOTE: 체인에 대한 반환
         return $this;
     }
 
@@ -1832,7 +1828,7 @@ class Robot implements Workable
 ### 의존성 역전 원칙 (DIP)
 
 이 원칙은 두 가지 필수 사항을 명시합니다.
-1. 상위 레벨의 모듈은 하위 수준의 모듈에 의존해서는 안 됩니다. 상위 레벨과 하위 레벨의 모듈 모두 추상화에 의존해야 합니다.
+1. 상위 레벨의 모듈은 하위 레벨의 모듈에 의존해서는 안 됩니다. 상위 레벨과 하위 레벨의 모듈 모두 추상화에 의존해야 합니다.
 2. 추상화된 것은 구체적인 것에 의존하면 안 됩니다. 구체적인 사항들은 추상화에 의존해야 합니다.
 
 한 번에 이해하기는 어려울 수 있습니다. 하지만 만약 당신이 PHP 프레임워크(symfony 등)를 사용해왔다면, 의존성 주입(DI, Dependency Injection)폼 안에 해당 원칙이 구현된 것을 보아왔을 것입니다.
